@@ -13,8 +13,8 @@ import java.util.Map;
  * Created by Müller on 13.05.2016.
  */
 public class LineReader extends DataReader {
-
-    public parseContents(InputStream input){
+@Override
+    public Data parseContents(InputStream input){
         BufferedReader bis= new BufferedReader(new InputStreamReader(input));
         try {
             String line = bis.readLine();
@@ -33,21 +33,22 @@ public class LineReader extends DataReader {
 
             //read Data for all variables
             Map<String,Double[]> dataMap= new HashMap<>(numvar);
-            for(int i=0;i<numvar;i++){
-                line =bis.readLine();
+            for(int i=0;i<numvar;i++) {
+                line = bis.readLine();
 
-                List<Double> data=new LinkedList<>();
+                List<Double> data = new LinkedList<>();
 
                 for (String s : linesplit(line, delimiter)) {
                     data.add(Double.parseDouble(s));
 
                 }
-                Double[] vals= new Double[data.size()];
+                Double[] vals = new Double[data.size()];
                 data.toArray(vals);
-                dataMap.put(varnames[i],vals);
-                return dataMap;
-
+                dataMap.put(varnames[i], vals);
             }
+                return  new DataImplementation(dataMap);
+
+
 
 
 
@@ -63,7 +64,8 @@ public class LineReader extends DataReader {
         }
 
 
-    }
+    return null;
+}
 
     private  String[] linesplit(String line, String delimiter) {
         return line.split(delimiter);

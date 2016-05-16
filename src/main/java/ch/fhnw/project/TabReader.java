@@ -13,8 +13,9 @@ import java.util.Map;
  * Created by Müller on 13.05.2016.
  */
 public class TabReader extends DataReader {
+    @Override
 
-    public parseContents(InputStream input){
+    public Data parseContents(InputStream input){
         BufferedReader bis= new BufferedReader(new InputStreamReader(input) {
             @Override
             public int read() throws IOException {
@@ -52,9 +53,9 @@ public class TabReader extends DataReader {
                 Double[] vals =new Double[values[i].size()];
                 values[i].toArray(vals);
                 dataMap.put(varnames[i],vals);
-                return dataMap;
 
             }
+            return new DataImplementation(dataMap);
 
 
 
@@ -62,7 +63,8 @@ public class TabReader extends DataReader {
 
 
 
-            }
+
+        }
 
 
 
@@ -73,6 +75,7 @@ public class TabReader extends DataReader {
             e.printStackTrace();
         }
 
+        return null;
     }
 
     private String[] splitLine(String line) {
