@@ -1,9 +1,8 @@
 package ch.fhnw.project;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -17,7 +16,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public final class App extends Application {
     public App() {
@@ -27,16 +25,16 @@ public final class App extends Application {
         launch(args);
     }
 
-    private String  firstvariable,secondvariable;
-    private Double[] dataFirstvariable,dataSecondvariable;
+    private String firstvariable, secondvariable;
+    private Double[] dataFirstvariable, dataSecondvariable;
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
-    private final ScatterChart<Number, Number> scatterchart=new ScatterChart<Number, Number>(xAxis,yAxis);
-    private HBox scatter;
-    private XYChart.Series series1 = new XYChart.Series<>();
-
-
-
+    final NumberAxis x1Axis=new NumberAxis();
+    final NumberAxis y1Axis=new NumberAxis();
+    private final ScatterChart<Number, Number> scatterchart = new ScatterChart<>(xAxis, yAxis);
+    private final LineChart<Number, Number> lineChart = new LineChart<>(x1Axis, y1Axis);
+    private XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
+    private LineChart.Series<Number,Number> series2 = new LineChart.Series<>();
 
 
     @Override
@@ -57,13 +55,14 @@ public final class App extends Application {
                 getVariable(mydata);
                 getData(mydata);
                 XYChart(mydata);
+                lineChart();
 
-            }
-            else if (selectedFile.getName().endsWith(".lin")) {
+            } else if (selectedFile.getName().endsWith(".lin")) {
                 Data mydata = new LineReader().parseContents(selectedFile);
                 getVariable(mydata);
                 getData(mydata);
                 XYChart(mydata);
+                lineChart();
 
             }
 
@@ -74,9 +73,11 @@ public final class App extends Application {
         // Layout
         VBox pane = new VBox();
         pane.getChildren().addAll(scatterchart);
+        pane.getChildren().addAll(lineChart);
 
-        StackPane stackpane=new StackPane();
+        StackPane stackpane = new StackPane();
         stackpane.getChildren().add(pane);
+        //stackpane.getChildren().add();
 
         primarystage.setTitle("Datenvisualisierung");
         Scene scene = new Scene(stackpane);
@@ -85,8 +86,8 @@ public final class App extends Application {
     }
 
     private void getData(Data mydata) {
-        dataFirstvariable=mydata.getDataForVariable(firstvariable);
-        dataSecondvariable=mydata.getDataForVariable(secondvariable);
+        dataFirstvariable = mydata.getDataForVariable(firstvariable);
+        dataSecondvariable = mydata.getDataForVariable(secondvariable);
     }
 
     private void getVariable(Data mydata) {
@@ -95,11 +96,9 @@ public final class App extends Application {
         Set<String> vars = mydata.getVariableNames();
         Iterator<String> iter = vars.iterator();
         firstvariable = iter.next();
-        if(iter.hasNext()){
-            secondvariable=iter.next();
-            System.out.print(iter);
-        }
-        else firstvariable=secondvariable;
+        if (iter.hasNext()) {
+            secondvariable = iter.next();
+        } else firstvariable = secondvariable;
 
         System.out.print(mydata);
     }
@@ -114,38 +113,39 @@ public final class App extends Application {
         alert.showAndWait();
     }
 
-    //Scatterchart, put data in scatterchart
+    //Scatterchart
     public void XYChart(Data mydata) {
 
-        //put Data in scatterchart
-        for(int i=0;i<dataFirstvariable.length;i++){
-            series1.getData().add(new XYChart.Data(dataFirstvariable[i],dataSecondvariable[i]));
-
-        }
-        //
-        scatterchart.getData().addAll(series1);
-        scatter=new HBox();
-        scatter.getChildren().addAll(scatterchart);
-
-
-
-
+        //put data in XY-scatterchart
+        for (int i = 0; i < dataFirstvariable.length; i++) {
+            series1.getData().add(new XYChart.Data<>(dataFirstvariable[i], dataSecondvariable[i]));
 
 
         }
-    public void scaleaxis(){
+        //hinzufügen des Scattercharts, eventuell noch verschieben
+        scatterchart.getData().add(series1);
+
 
     }
 
+    public void lineChart() {
+        for (int i = 0; i < dataFirstvariable.length; i++) {
+            series2.getData().add(new XYChart.Data<>(dataFirstvariable[i], dataSecondvariable[i]));}
+            lineChart.getData().add(series2);
 
 
-    //catch values for specific variables
-   /* private void dataForVariable(Data data) {
-        dataFirstvariable= data.getDataForVariable(firstvariable);
-        dataSecondvariable=data.getDataForVariable(secondvariable);
-    }*/
-
+    }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
