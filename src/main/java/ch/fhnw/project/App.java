@@ -118,7 +118,7 @@ public final class App extends Application {
     public void XYChart(Data mydata) {
 
         //put Data in scatterchart
-        for(int i=0;i<firstvariable.length();i++){
+        for(int i=0;i<dataFirstvariable.length;i++){
             series1.getData().add(new XYChart.Data(dataFirstvariable[i],dataSecondvariable[i]));
 
         }

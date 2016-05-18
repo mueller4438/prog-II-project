@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public abstract class DataReader {
 
-    public abstract Data parseContents(InputStream input);
+    public abstract Data parseContents(InputStream input) throws DataReaderException;
 
 
 

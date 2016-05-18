@@ -12,24 +12,27 @@ import java.util.Map;
 /**
  * Created by Müller on 13.05.2016.
  */
-public class TabReader extends DataReader {
+public class TabReader extends DataReader  {
     @Override
 
-    public Data parseContents(InputStream input){
-        BufferedReader bis= new BufferedReader(new InputStreamReader(input) {
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-        });
+    public Data parseContents(InputStream input)throws DataReaderException{
+        BufferedReader bis= new BufferedReader(new InputStreamReader(input));
+
         try {
+            long linenum=0;
 
             //get variable names
-            String line = bis.readLine();
+            String line = bis.readLine();linenum++;
+            if(line.length()==0 || line==null){
+                throw new DataReaderException("Error;no data found");
+            }
             String[] varnames = splitLine(line);
 
             //get number of variables
             int numvars = varnames.length;
+            if(numvars==0){
+                throw new DataReaderException("Error;no variables found");
+            }
             List<Double>[] values = new List[numvars];
             for (int i = 0; i < numvars; i++) {
                 values[i] = new LinkedList<>();
@@ -37,6 +40,8 @@ public class TabReader extends DataReader {
 
             //read data for all variables
             while ((line=bis.readLine())!=null){
+                line =bis.readLine();
+                linenum++;
                 //ignores empty lines at the end of a file
                 if(line.length()>0){
                     String[] contents = splitLine(line);
@@ -72,10 +77,10 @@ public class TabReader extends DataReader {
 
 
          catch (IOException e) {
-            e.printStackTrace();
+             throw new DataReaderException("Error while reading the data" + e.getMessage());
         }
 
-        return null;
+
     }
 
     private String[] splitLine(String line) {
