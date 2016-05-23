@@ -79,10 +79,7 @@ public final class App extends Application {
         histogram(barChart2,secondvariable);
         // Layout
         VBox pane = new VBox();
-        pane.getChildren().addAll(scatterchart);
-        pane.getChildren().addAll(lineChart);
-        pane.getChildren().addAll(barChart1);
-        pane.getChildren().addAll(barChart2);
+        pane.getChildren().addAll(scatterchart, lineChart, barChart1, barChart2);
 
         StackPane stackpane = new StackPane();
         stackpane.getChildren().add(pane);
