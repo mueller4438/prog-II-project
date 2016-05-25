@@ -13,11 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.*;
+
+
 import java.io.File;
 import java.util.*;
 
@@ -33,13 +35,13 @@ public final class App extends Application {
     private Double[] dataFirstvariable, dataSecondvariable;
     private Data mydata;
     private boolean isOpeningFile;
+    ColorPicker colorPicker=new ColorPicker();
 
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
     final NumberAxis x1Axis=new NumberAxis();
     final NumberAxis y1Axis=new NumberAxis();
-    final NumberAxis x2Axis=new NumberAxis();
-    final NumberAxis y2Axis=new NumberAxis();
+
 
     private final ScatterChart<Number, Number> scatterchart = new ScatterChart<>(xAxis, yAxis);
     private final LineChart<Number, Number> lineChart = new LineChart<>(x1Axis, y1Axis);
@@ -52,7 +54,7 @@ public final class App extends Application {
 
     @Override
     public void start(Stage primarystage) {
-        lineChart.setAxisSortingPolicy(LineChart.SortingPolicy.NONE);
+        //lineChart.setAxisSortingPolicy(LineChart.SortingPolicy.NONE);
         scatterchart.getData().add(series1);
         lineChart.getData().add(series2);
 
@@ -63,12 +65,12 @@ public final class App extends Application {
         filePathTextField.setPrefSize(1000, 5);
 
         // Color Chooser Button
-        Button colorButton = new Button("Color Chooser");
-        colorButton.setOnAction(actionEvent -> newColor());
+        //Button colorButton = new Button("Color Chooser");
+        //colorButton.setOnAction(actionEvent -> colorPicker.show());
 
         // Labels Combobox
-        Label xLabel = new Label("X-Axis: ");
-        Label yLabel = new Label("Y-Axis: ");
+        Label xLabel = new Label(firstvariable);
+        Label yLabel = new Label(secondvariable);
         Label sizeLabel = new Label("Bubble Size: ");
         // X Combobox
         ComboBox<String> xComboBox = new ComboBox<String>();
@@ -103,12 +105,12 @@ public final class App extends Application {
         // Z Combobox
         ComboBox<String> zComboBox = new ComboBox<String>();
         zComboBox.getItems().addAll(
-                "", "Variable X", "Variable Y", "Variable Z"
+                "", "Varilllable X", "Variable Y", "Variable Z"
         );
         zComboBox.setValue("");
 
         StackPane scatterPane = new StackPane(lineChart, scatterchart);
-        scatterchart.lookup(".chart-plot-background").setStyle("-fx-background-color:transparent");
+        lineChart.lookup(".chart-plot-background").setStyle("-fx-background-color:transparent");
 
         // File Path Button
         Button filePathButton = new Button(" ... ");
@@ -133,7 +135,7 @@ public final class App extends Application {
 
         // Second Line HBox
         HBox secondLine = new HBox();
-        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, colorButton);
+        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox,colorPicker);
         secondLine.setAlignment(Pos.CENTER_RIGHT);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
@@ -162,6 +164,8 @@ public final class App extends Application {
         primarystage.setScene(scene);
         primarystage.show();
     }
+
+
 
 
     private void fillVariableComboBoxes(ComboBox<String> xComboBox, ComboBox<String> yComboBox){
@@ -208,12 +212,6 @@ public final class App extends Application {
         fillHistogram(barChart2, secondvariable);
     }
 
-    // JColorChooser ersetzen!!!
-    public static void newColor() {
-        Color newColor = JColorChooser.showDialog(null, "Choose a color", null);
-        //ColorPicker newColor = new ColorPicker();
-        return;
-    }
 
     private void getData(Data mydata) {
         dataFirstvariable = mydata.getDataForVariable(firstvariable);
@@ -248,7 +246,16 @@ public final class App extends Application {
         //put data in XY-scatterchart
         series1.getData().clear();
         for (int i = 0; i < dataFirstvariable.length; i++) {
+
             series1.getData().add(new XYChart.Data<>(dataFirstvariable[i], dataSecondvariable[i]));
+
+            Circle circle=new Circle();
+            circle.setRadius(1);
+            circle.setFill(Color.PINK);
+            series1.setNode(circle);
+
+            scatterchart.getData().add(series1);
+
 
 
         }
