@@ -323,10 +323,9 @@ public final class App extends Application {
             Double y =dataSecondvariable[i];
             XYChart.Data<Number,Number> dataPoint=new XYChart.Data<>(x,y);
             Circle circle=new Circle();
-            Double r=slider.getValue();
             slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-                        circle.setRadius(r);
-                    });
+                        circle.setRadius(slider.getValue());
+            });
 
             colorPicker.valueProperty().addListener(observable -> {circle.setFill(colorPicker.getValue());});
             
@@ -372,6 +371,7 @@ public final class App extends Application {
         XYChart.Series s=new XYChart.Series<>();
         for(int i=0;i<numBins;i++){
             s.getData().add(new XYChart.Data(xAxis[i], ret[i]));
+            
         }
         chrt.getData().clear();
         chrt.getData().addAll(s);
@@ -380,6 +380,7 @@ public final class App extends Application {
         chrt.setCategoryGap(0);
         chrt.setBarGap(0);
         chrt.setStyle("-fx-background-color: transparent;");
+
 
 
         return chrt;
