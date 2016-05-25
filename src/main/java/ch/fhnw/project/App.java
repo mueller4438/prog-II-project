@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -14,11 +15,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.awt.*;
+
+
 import java.io.File;
 import java.util.*;
 
@@ -35,13 +39,14 @@ public final class App extends Application {
     private Data mydata;
     private boolean isOpeningFile;
     private boolean isVisible = true;
+    ColorPicker colorPicker=new ColorPicker();
+    
 
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
     final NumberAxis x1Axis=new NumberAxis();
     final NumberAxis y1Axis=new NumberAxis();
-    final NumberAxis x2Axis=new NumberAxis();
-    final NumberAxis y2Axis=new NumberAxis();
+
 
     private final ScatterChart<Number, Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
     private final LineChart<Number, Number> lineChart = new LineChart<>(x1Axis, y1Axis);
@@ -152,7 +157,7 @@ public final class App extends Application {
 
         // Second Line HBox
         HBox secondLine = new HBox();
-        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorButton);
+        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorButton,colorPicker);
         secondLine.setAlignment(Pos.CENTER_RIGHT);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
@@ -259,8 +264,8 @@ public final class App extends Application {
     }
 
     // JColorChooser ersetzen!!!
-    public static void newColor() {
-        Color newColor = JColorChooser.showDialog(null, "Choose a color", null);
+    public void newColor() {
+        colorPicker.show();
         //ColorPicker newColor = new ColorPicker();
         return;
     }
@@ -294,12 +299,22 @@ public final class App extends Application {
         alert.showAndWait();
     }
 
+
+
     //Scatterchart
-    private void fillXYChart(Data mydata) {
+    private  void fillXYChart(Data mydata) {
         //put data in XY-scatterchart
         series1.getData().clear();
         for (int i = 0; i < dataFirstvariable.length; i++) {
             series1.getData().add(new XYChart.Data<>(dataFirstvariable[i], dataSecondvariable[i]));
+            Circle circle=new Circle();
+            circle.setRadius(1);
+            circle.setFill(Color.PINK);
+            series1.setNode(circle);
+
+           // scatterChart.getData().add(series1);
+
+
 
 
         }
