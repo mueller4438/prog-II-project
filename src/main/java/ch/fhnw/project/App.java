@@ -40,8 +40,8 @@ public final class App extends Application {
     private Data mydata;
     private boolean isOpeningFile;
     private boolean isVisible = true;
-    ColorPicker colorPicker=new ColorPicker();
-    Slider slider =new Slider(0,5,100);
+    ColorPicker colorPicker = new ColorPicker();
+    Slider slider = new Slider(0, 5, 100);
 
 
     final NumberAxis xAxis = new NumberAxis();
@@ -73,14 +73,9 @@ public final class App extends Application {
         filePathTextField.setDisable(true);
         filePathTextField.setPrefSize(1000, 5);
 
-        // Color Chooser Button
-        Button colorButton = new Button("Color");
-        colorButton.setOnAction(actionEvent -> newColor());
-
-        //Slider point size
+        //Slider Point Size
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
-        ;
 
         // Disable Line Chart Button
         Button visibleButton = new Button();
@@ -164,7 +159,7 @@ public final class App extends Application {
 
         // Second Line HBox
         HBox secondLine = new HBox();
-        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorButton,colorPicker,slider);
+        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorPicker, slider);
         secondLine.setAlignment(Pos.CENTER_RIGHT);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
@@ -271,14 +266,6 @@ public final class App extends Application {
         fillHistogram(barChart1, firstvariable);
         fillHistogram(barChart2, secondvariable);
     }
-
-    // JColorChooser ersetzen!!!
-    public void newColor() {
-        colorPicker.show();
-        //ColorPicker newColor = new ColorPicker();
-        return;
-    }
-
 
     private void getData(Data mydata) {
         dataFirstvariable = mydata.getDataForVariable(firstvariable);
