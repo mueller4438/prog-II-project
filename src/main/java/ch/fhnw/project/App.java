@@ -174,7 +174,8 @@ public final class App extends Application {
         //fourthLine.setSpacing(10);
         //fourthLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         fourthLine.setStyle("-fx-background-color: white;");
-        fourthLine.setHgrow(fourthLine, Priority.ALWAYS); // funktioniert nicht!
+        fourthLine.setHgrow(barChart1, Priority.ALWAYS);
+        fourthLine.setHgrow(barChart2, Priority.ALWAYS);
 
         VBox pane = new VBox();
         pane.getChildren().addAll(firstLine, secondLine, thirdLine, fourthLine);
