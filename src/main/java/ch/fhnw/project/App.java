@@ -40,7 +40,8 @@ public final class App extends Application {
     private boolean isOpeningFile;
     private boolean isVisible = true;
     ColorPicker colorPicker=new ColorPicker();
-    Slider slider =new Slider(0,5,100);
+    Slider slider =new Slider(0,40,10);
+    Color color = colorPicker.getValue();
 
 
     final NumberAxis xAxis = new NumberAxis();
@@ -73,12 +74,13 @@ public final class App extends Application {
         filePathTextField.setPrefSize(1000, 5);
 
         // Color Chooser Button
-        Button colorButton = new Button("Color");
-        colorButton.setOnAction(actionEvent -> newColor());
+        /*Button colorButton = new Button("Color");
+        colorButton.setOnAction(actionEvent -> newColor());*/
 
         //Slider point size
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
+
         ;
 
         // Disable Line Chart Button
@@ -163,7 +165,7 @@ public final class App extends Application {
 
         // Second Line HBox
         HBox secondLine = new HBox();
-        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorButton,colorPicker,slider);
+        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel,colorPicker,slider);
         secondLine.setAlignment(Pos.CENTER_RIGHT);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
@@ -270,11 +272,13 @@ public final class App extends Application {
     }
 
     // JColorChooser ersetzen!!!
-    public void newColor() {
+    /*public void newColor() {
         colorPicker.show();
         //ColorPicker newColor = new ColorPicker();
+
         return;
-    }
+        }*/
+
 
 
     private void getData(Data mydata) {
@@ -316,14 +320,17 @@ public final class App extends Application {
             Double y =dataSecondvariable[i];
             XYChart.Data<Number,Number> dataPoint=new XYChart.Data<>(x,y);
             Circle circle=new Circle();
+            Double r=slider.getValue();
             slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-                        circle.setRadius(slider.getValue());
+                        circle.setRadius(r);
                     });
-                    circle.setFill(Color.PINK);
+
+            colorPicker.valueProperty().addListener(observable -> {circle.setFill(colorPicker.getValue());});
+            
             dataPoint.setNode(circle);
             series1.getData().add(dataPoint);
 
-           //scatterChart.getData().add(series1);
+
 
 
 
