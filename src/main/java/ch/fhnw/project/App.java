@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -33,6 +34,7 @@ public final class App extends Application {
     private Double[] dataFirstvariable, dataSecondvariable;
     private Data mydata;
     private boolean isOpeningFile;
+    private boolean isVisible = true;
 
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
@@ -41,7 +43,7 @@ public final class App extends Application {
     final NumberAxis x2Axis=new NumberAxis();
     final NumberAxis y2Axis=new NumberAxis();
 
-    private final ScatterChart<Number, Number> scatterchart = new ScatterChart<>(xAxis, yAxis);
+    private final ScatterChart<Number, Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
     private final LineChart<Number, Number> lineChart = new LineChart<>(x1Axis, y1Axis);
     private final BarChart<String,Number> barChart1= new BarChart<>(new CategoryAxis(), new NumberAxis()),barChart2=new BarChart<String, Number>(new CategoryAxis(),new NumberAxis());
 
@@ -52,26 +54,41 @@ public final class App extends Application {
 
     @Override
     public void start(Stage primarystage) {
+
         lineChart.setAxisSortingPolicy(LineChart.SortingPolicy.NONE);
-        scatterchart.getData().add(series1);
+        scatterChart.getData().add(series1);
+        scatterChart.setLegendVisible(false);
         lineChart.getData().add(series2);
+        lineChart.setLegendVisible(false);
 
         // File Path Text Field
         TextField filePathTextField = new TextField();
         filePathTextField.setDisable(true);
-        //filePath.setOnAction(actionEvent -> writeFilePath());
         filePathTextField.setPrefSize(1000, 5);
 
         // Color Chooser Button
-        Button colorButton = new Button("Color Chooser");
+        Button colorButton = new Button("Color");
         colorButton.setOnAction(actionEvent -> newColor());
 
+        // Disable Line Chart Button
+        Button visibleButton = new Button();
+        visibleButton.setOnMouseClicked(actionEvent -> isLineChartVisible(visibleButton));
+        visibleButton.setText("invisible");
+        visibleButton.setPrefSize(100, 10);
+
+        // Labels
+        // Label Plot
+        Label plotLabel = new Label ("Plot: ");
+        // Label Line Chart
+        Label lineChartLabel = new Label ("Line Chart: ");
         // Labels Combobox
         Label xLabel = new Label("X-Axis: ");
         Label yLabel = new Label("Y-Axis: ");
         Label sizeLabel = new Label("Bubble Size: ");
+
         // X Combobox
         ComboBox<String> xComboBox = new ComboBox<String>();
+        //xComboBox.setPrefSize(150, 10);
         xComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -87,6 +104,7 @@ public final class App extends Application {
         });
         // Y Combobox
         ComboBox<String> yComboBox = new ComboBox<String>();
+        //yComboBox.setPrefSize(150, 10);
         yComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -102,13 +120,14 @@ public final class App extends Application {
         });
         // Z Combobox
         ComboBox<String> zComboBox = new ComboBox<String>();
+        //zComboBox.setPrefSize(150, 10);
         zComboBox.getItems().addAll(
                 "", "Variable X", "Variable Y", "Variable Z"
         );
         zComboBox.setValue("");
 
-        StackPane scatterPane = new StackPane(lineChart, scatterchart);
-        scatterchart.lookup(".chart-plot-background").setStyle("-fx-background-color:transparent");
+        StackPane scatterPane = new StackPane(lineChart, scatterChart);
+        scatterChart.lookup(".chart-plot-background").setStyle("-fx-background-color:transparent");
 
         // File Path Button
         Button filePathButton = new Button(" ... ");
@@ -133,34 +152,64 @@ public final class App extends Application {
 
         // Second Line HBox
         HBox secondLine = new HBox();
-        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, colorButton);
+        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorButton);
         secondLine.setAlignment(Pos.CENTER_RIGHT);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         secondLine.setStyle("-fx-background-color: white;");
 
+        // Third Line HBox
+        HBox thirdLine = new HBox();
+        thirdLine.getChildren().addAll(scatterPane);
+        //thirdLine.setAlignment(Pos.CENTER);
+        //thirdLine.setSpacing(10);
+        //thirdLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
+        thirdLine.setStyle("-fx-background-color: white;");
+        thirdLine.setHgrow(scatterPane, Priority.ALWAYS);
+
+        // Fourth Line HBox
+        HBox fourthLine = new HBox();
+        fourthLine.getChildren().addAll(barChart1, barChart2);
+        //fourthLine.setAlignment(Pos.CENTER);
+        //fourthLine.setSpacing(10);
+        //fourthLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
+        fourthLine.setStyle("-fx-background-color: white;");
+        fourthLine.setHgrow(fourthLine, Priority.ALWAYS); // funktioniert nicht!
+
         VBox pane = new VBox();
-        //pane.getChildren().addAll(firstLine, secondLine, scatterchart, lineChart, barChart1, barChart2);
-        pane.getChildren().addAll(firstLine, secondLine, scatterPane, barChart1, barChart2);// funktioniert nicht!
+        pane.getChildren().addAll(firstLine, secondLine, thirdLine, fourthLine);
         pane.setAlignment(Pos.TOP_CENTER);
-        pane.setSpacing(10);
-        pane.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
+        //pane.setSpacing(10);
+        //pane.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         pane.setStyle("-fx-background-color: white;");
 
         StackPane stackpane = new StackPane();
         stackpane.getChildren().add(pane);
 
         // Scene
-        Scene scene = new Scene(stackpane, 750, 750);
+        Scene scene = new Scene(stackpane, 1000, 1000);
 
         // Stage
         primarystage.setTitle("Datenvisualisierung");
-        primarystage.setMinHeight(1000);
-        primarystage.setMinWidth(1000);
+        //primarystage.setMinHeight(1000);
+        //primarystage.setMinWidth(1000);
         //primarystage.setMaxHeight(1000);
         //primarystage.setMaxWidth(1000);
         primarystage.setScene(scene);
         primarystage.show();
+    }
+
+    private void isLineChartVisible(Button visibleButton){
+        if (isVisible == true){
+            visibleButton.setText("visible");
+            lineChart.setVisible(false);
+            isVisible = false;
+        }
+        else {
+            visibleButton.setText("invisible");
+            lineChart.setVisible(true);
+            isVisible = true;
+        }
     }
 
 
@@ -214,6 +263,7 @@ public final class App extends Application {
         //ColorPicker newColor = new ColorPicker();
         return;
     }
+
 
     private void getData(Data mydata) {
         dataFirstvariable = mydata.getDataForVariable(firstvariable);
@@ -280,7 +330,7 @@ public final class App extends Application {
         }
         String[] xAxis=new String[numBins];
         for(int i= 0;i<numBins;i++){
-            xAxis[i]= String.format("%.2f-%.2f",(min+i*range/numBins),(min+(i+1)*range/numBins));
+            xAxis[i]= String.format("%.2f to %.2f",(min+i*range/numBins),(min+(i+1)*range/numBins));
         }
         XYChart.Series s=new XYChart.Series<>();
         for(int i=0;i<numBins;i++){
@@ -288,7 +338,7 @@ public final class App extends Application {
         }
         chrt.getData().clear();
         chrt.getData().addAll(s);
-        chrt.setTitle("Histogram for "+varName);
+        chrt.setTitle(varName);
         chrt.setLegendVisible(false);
         chrt.setCategoryGap(0);
         chrt.setBarGap(0);
