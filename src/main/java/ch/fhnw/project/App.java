@@ -10,6 +10,7 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -196,6 +197,8 @@ public final class App extends Application {
         //pane.setSpacing(10);
         //pane.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         pane.setStyle("-fx-background-color: white;");
+        pane.setVgrow(thirdLine, Priority.ALWAYS);
+        pane.setVgrow(fourthLine, Priority.ALWAYS);
 
         StackPane stackpane = new StackPane();
         stackpane.getChildren().add(pane);
