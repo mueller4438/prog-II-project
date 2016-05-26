@@ -64,8 +64,9 @@ public class LineReader extends DataReader {
                     dataLength = data.size();
                 }
                 else{
-                    //on all other iteration we make sure that the read data lines have the same length
+                    if(dataLength!=data.size()){                    //on all other iteration we make sure that the read data lines have the same length
                     throw new DataReaderException("Error: datalength between variables are different, expected number of datapoints = "+ dataLength +"found number of datapoint= " +data.size()+",Error on line "+ lineNum);
+                }
                 }
                 Double[] vals = new Double[data.size()];
                 data.toArray(vals);
