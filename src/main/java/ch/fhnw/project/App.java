@@ -134,7 +134,7 @@ public final class App extends Application {
         zComboBox.setValue("");
 
         StackPane scatterPane = new StackPane(lineChart, scatterChart);
-        scatterChart.lookup(".chart-plot-background").setStyle("-fx-background-color:transparent");
+        scatterChart.lookup(".chart-plot-background").setStyle("-fx-background-color: transparent");
 
         // File Path Button
         Button filePathButton = new Button(" ... ");
