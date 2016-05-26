@@ -41,7 +41,7 @@ public final class App extends Application {
     private boolean isOpeningFile;
     private boolean isVisible = true;
     ColorPicker colorPicker = new ColorPicker();
-    Slider slider = new Slider(0, 5, 100);
+    Slider slider = new Slider(0, 25, 10);
 
 
     final NumberAxis xAxis = new NumberAxis();
@@ -309,7 +309,8 @@ public final class App extends Application {
             slider.valueProperty().addListener((observable, oldValue, newValue) -> {
                         circle.setRadius(slider.getValue());
                     });
-                    circle.setFill(Color.PINK);
+            colorPicker.valueProperty().addListener(observable -> {circle.setFill(colorPicker.getValue());});
+
             dataPoint.setNode(circle);
             series1.getData().add(dataPoint);
 
