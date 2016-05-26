@@ -15,18 +15,31 @@ public abstract class DataReader {
     public abstract Data parseContents(InputStream input) throws DataReaderException;
 
 
-
-
-
-
-
-    public  Data parseContents(File input) throws DataReaderException {
+    public Data parseContents(File input) throws DataReaderException {
         try {
             FileInputStream fis = new FileInputStream(input);
             return parseContents(fis);
 
         } catch (FileNotFoundException e) {
-            throw new DataReaderException("Could not read file: "+e.toString());
+            throw new DataReaderException("Could not read file: " + e.toString());
+        }
+    }
+
+
+    //helper function
+
+    static double parseDouble(String s, long lineNum) throws DataReaderException {
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            throw new DataReaderException("Error on line " + lineNum + ": Unable to parse " + s + " as a Double");
+        }
+    }
+    static int parseInt(String s, long lineNum) throws DataReaderException{
+        try {
+            return Integer.parseInt(s);
+        }catch(NumberFormatException e){
+            throw new DataReaderException("Error on line "+lineNum+": Unable to parse "+s+" as a integer");
         }
     }
 }

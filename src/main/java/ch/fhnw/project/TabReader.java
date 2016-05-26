@@ -19,7 +19,7 @@ public class TabReader extends DataReader  {
         BufferedReader bis= new BufferedReader(new InputStreamReader(input));
 
         try {
-            long linenum=0;
+            int linenum=0;
 
             //get variable names
             String line = bis.readLine();linenum++;
@@ -45,8 +45,12 @@ public class TabReader extends DataReader  {
                 //ignores empty lines at the end of a file
                 if(line.length()>0){
                     String[] contents = splitLine(line);
+                    if(contents.length!=numvars){
+                        throw new DataReaderException("Error on line "+linenum+" :expected "+numvars+"values, but found "+contents.length + "values instead");
+                    }
                     for(int i=0;i<contents.length;i++){
-                        values[i].add(Double.parseDouble(contents[i]));
+                        String valToParse=contents[i];
+                        values[i].add(parseDouble(valToParse,linenum));
                     }
 
 
