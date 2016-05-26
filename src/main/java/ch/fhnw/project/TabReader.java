@@ -19,17 +19,17 @@ public class TabReader extends DataReader  {
         BufferedReader bis= new BufferedReader(new InputStreamReader(input));
 
         try {
-            int linenum=0;
+
 
             //get variable names
-            String line = bis.readLine();linenum++;
+            String line = bis.readLine();
             if(line.length()==0 || line==null){
                 throw new DataReaderException("Error;no data found");
             }
-            String[] varnames = splitLine(line);
+            String[] varNames = splitLine(line);
 
             //get number of variables
-            int numvars = varnames.length;
+            int numvars = varNames.length;
             if(numvars==0){
                 throw new DataReaderException("Error;no variables found");
             }
@@ -39,8 +39,8 @@ public class TabReader extends DataReader  {
             }
 
             //read data for all variables
+            long linenum=1;
             while ((line=bis.readLine())!=null){
-                line =bis.readLine();
                 linenum++;
                 //ignores empty lines at the end of a file
                 if(line.length()>0){
@@ -50,40 +50,29 @@ public class TabReader extends DataReader  {
                     }
                     for(int i=0;i<contents.length;i++){
                         String valToParse=contents[i];
-                        values[i].add(parseDouble(valToParse,linenum));
+                        Double val = parseDouble(valToParse,linenum);
+                        values[i].add(val);
                     }
 
 
                 }
                 }
+            if(linenum==1){
+                throw new DataReaderException("Error: only variables, but no data found");
+            }
             Map<String,Double[]> dataMap= new HashMap<>(numvars);
 
             for(int i=0;i<numvars;i++){
                 Double[] vals =new Double[values[i].size()];
                 values[i].toArray(vals);
-                dataMap.put(varnames[i],vals);
-
+                dataMap.put(varNames[i],vals);
             }
             return new DataImplementation(dataMap);
-
-
-
-
-
-
-
-
         }
 
-
-
-
-
-
-         catch (IOException e) {
+        catch (IOException e) {
              throw new DataReaderException("Error while reading the data" + e.getMessage());
         }
-
 
     }
 

@@ -123,6 +123,7 @@ public final class App extends Application {
                 fillLineChart();
                 fillXYChart(mydata);
                 fillHistogram(barChart2,secondvariable);
+
             }
         });
         // Z Combobox
@@ -282,7 +283,7 @@ public final class App extends Application {
             secondvariable = iter.next();
         } else firstvariable = secondvariable;
 
-        System.out.print(mydata);
+
     }
 
     //Alert Window
@@ -343,7 +344,8 @@ public final class App extends Application {
             ret[i]=0;
         }
         for (Double v : d) {
-            int z= (int)((v-min)/(range)*(numBins-1));
+
+            int z= (int)((v-min)/(range+0.000001)*(numBins));
             ret[z]++;
         }
         String[] xAxis=new String[numBins];
