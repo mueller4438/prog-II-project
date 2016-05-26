@@ -14,33 +14,58 @@ import java.util.Map;
  */
 public class LineReader extends DataReader {
 @Override
-    public Data parseContents(InputStream input){
+    public Data parseContents(InputStream input) throws DataReaderException{
         BufferedReader bis= new BufferedReader(new InputStreamReader(input));
         try {
-            String line = bis.readLine();
+            int lineNum=0;
+            String line = bis.readLine();lineNum++;
+            if(line.length()==0||line==null){
+                throw new DataReaderException("Error no data found");
+            }
 
             //get number of variables
-            int numvar= Integer.parseInt(line);
+            int numvar= parseInt(line,lineNum);
+            if(numvar==0){
+                throw new DataReaderException("Error no variables found");
+            }
 
             //get variable names
             String[] varnames= new String[numvar];
             for(int i=0;i<numvar;i++){
-                line = bis.readLine();
+                line = bis.readLine();lineNum++;
+                if(line==null || line.length()==0){
+                    throw new DataReaderException("Error: tried to extract a variable name from line "+lineNum+" but found no data there");
+                }
                 varnames[i]=line;
             }
             //get Delimiter
-            String delimiter= bis.readLine();
+            String delimiter= bis.readLine();lineNum++;
+            if(line==null || line.length()==0){
+                throw new DataReaderException("Error: tried to extract delimiter "+lineNum+" but found no delimiter there");
+            }
 
             //read Data for all variables
             Map<String,Double[]> dataMap= new HashMap<>(numvar);
+            int dataLength=-1;
             for(int i=0;i<numvar;i++) {
-                line = bis.readLine();
+                line = bis.readLine();lineNum++;
+                if(line==null || line.length()==0){
+                    throw new DataReaderException("Error: tried to extract data from line "+lineNum+" but found no data there");
+                }
 
                 List<Double> data = new LinkedList<>();
 
                 for (String s : linesplit(line, delimiter)) {
-                    data.add(Double.parseDouble(s));
+                    data.add(parseDouble(s,lineNum));
 
+                }
+                if(i == 0) {
+                    //on first iteration remember data length so that we can compare with the others
+                    dataLength = data.size();
+                }
+                else{
+                    //on all other iteration we make sure that the read data lines have the same length
+                    throw new DataReaderException("Error: datalength between variables are different, expected number of datapoints = "+ dataLength +"found number of datapoint= " +data.size()+",Error on line "+ lineNum);
                 }
                 Double[] vals = new Double[data.size()];
                 data.toArray(vals);
@@ -60,11 +85,12 @@ public class LineReader extends DataReader {
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DataReaderException("Error while reading data "+e.getMessage());
+
         }
 
 
-    return null;
+
 }
 
     private  String[] linesplit(String line, String delimiter) {
