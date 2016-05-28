@@ -17,8 +17,8 @@ public abstract class DataReader {
 
     public Data parseContents(File input) throws DataReaderException {
         try {
-            FileInputStream fis = new FileInputStream(input);
-            return parseContents(fis);
+            FileInputStream fileInputStream = new FileInputStream(input);
+            return parseContents(fileInputStream);
 
         } catch (FileNotFoundException e) {
             throw new DataReaderException("Could not read file: " + e.toString());

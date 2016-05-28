@@ -16,56 +16,53 @@ public class TabReader extends DataReader  {
     @Override
 
     public Data parseContents(InputStream input)throws DataReaderException{
-        BufferedReader bis= new BufferedReader(new InputStreamReader(input));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
 
         try {
-
-
             //get variable names
-            String line = bis.readLine();
-            if(line.length()==0 || line==null){
+            String line = bufferedReader.readLine();
+            if(line.length() == 0 || line == null){
                 throw new DataReaderException("Error;no data found");
             }
-            String[] varNames = splitLine(line);
+            String[] nameOfVariables = splitLine(line);
 
             //get number of variables
-            int numvars = varNames.length;
-            if(numvars==0){
+            int numberOfVariables = nameOfVariables.length;
+            if(numberOfVariables == 0){
                 throw new DataReaderException("Error;no variables found");
             }
-            List<Double>[] values = new List[numvars];
-            for (int i = 0; i < numvars; i++) {
+            List<Double>[] values = new List[numberOfVariables];
+            for (int i = 0; i < numberOfVariables; i++) {
                 values[i] = new LinkedList<>();
             }
 
             //read data for all variables
-            long linenum=1;
-            while ((line=bis.readLine())!=null){
-                linenum++;
+            long lineNumber = 1;
+            while ((line = bufferedReader.readLine()) != null){
+                lineNumber++;
                 //ignores empty lines at the end of a file
-                if(line.length()>0){
+                if(line.length() > 0){
                     String[] contents = splitLine(line);
-                    if(contents.length!=numvars){
-                        throw new DataReaderException("Error on line "+linenum+" :expected "+numvars+"values, but found "+contents.length + "values instead");
+                    if(contents.length != numberOfVariables){
+                        throw new DataReaderException("Error on line "+lineNumber+" :expected "+numberOfVariables+"values, but found "+contents.length + "values instead");
                     }
-                    for(int i=0;i<contents.length;i++){
-                        String valToParse=contents[i];
-                        Double val = parseDouble(valToParse,linenum);
-                        values[i].add(val);
+                    for(int i = 0; i < contents.length; i++){
+                        String variableToParse = contents[i];
+                        Double variable = parseDouble(variableToParse,lineNumber);
+                        values[i].add(variable);
                     }
-
-
                 }
-                }
-            if(linenum==1){
+            }
+
+            if(lineNumber == 1){
                 throw new DataReaderException("Error: only variables, but no data found");
             }
-            Map<String,Double[]> dataMap= new HashMap<>(numvars);
+            Map<String,Double[]> dataMap = new HashMap<>(numberOfVariables);
 
-            for(int i=0;i<numvars;i++){
+            for(int i = 0; i < numberOfVariables; i++){
                 Double[] vals =new Double[values[i].size()];
                 values[i].toArray(vals);
-                dataMap.put(varNames[i],vals);
+                dataMap.put(nameOfVariables[i],vals);
             }
             return new DataImplementation(dataMap);
         }

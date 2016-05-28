@@ -10,9 +10,8 @@ public class DataImplementation implements Data {
 
         private final Map<String, Double[]> dataMap;
         public DataImplementation(Map<String, Double[]> data){
-            dataMap=data;
+            dataMap  = data;
         }
-
 
     @Override
     public Set<String>getVariableNames() {

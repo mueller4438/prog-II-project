@@ -4,24 +4,19 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.*;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import javax.swing.*;
 
 
 import java.io.File;
@@ -35,9 +30,9 @@ public final class App extends Application {
         launch(args);
     }
 
-    private String firstvariable, secondvariable;
-    private Double[] dataFirstvariable, dataSecondvariable;
-    private Data mydata;
+    private String firstVariable, secondVariable;
+    private Double[] dataFirstVariable, dataSecondVariable;
+    private Data myData;
     private boolean isOpeningFile;
     private boolean isVisible = true;
     ColorPicker colorPicker = new ColorPicker();
@@ -46,17 +41,17 @@ public final class App extends Application {
 
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
-    final NumberAxis x1Axis=new NumberAxis();
-    final NumberAxis y1Axis=new NumberAxis();
+    final NumberAxis x1Axis = new NumberAxis();
+    final NumberAxis y1Axis = new NumberAxis();
 
 
     private final ScatterChart<Number, Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
     private final LineChart<Number, Number> lineChart = new LineChart<>(x1Axis, y1Axis);
-    private final BarChart<String,Number> barChart1= new BarChart<>(new CategoryAxis(), new NumberAxis()),barChart2=new BarChart<String, Number>(new CategoryAxis(),new NumberAxis());
+    private final BarChart<String, Number> barChart1= new BarChart<>(new CategoryAxis(), new NumberAxis()), barChart2 = new BarChart<String, Number>(new CategoryAxis(), new NumberAxis());
 
-    private XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
-    private LineChart.Series<Number,Number> series2 = new LineChart.Series<>();
-    private BarChart.Series<Number,Number> series3=new BarChart.Series<>();
+    private XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+    private LineChart.Series<Number, Number> series2 = new LineChart.Series<>();
+    //private BarChart.Series<Number,Number> series3=new BarChart.Series<>();
 
 
     @Override
@@ -102,11 +97,11 @@ public final class App extends Application {
                 if(newValue == null || isOpeningFile){
                     return;
                 }
-                firstvariable = newValue;
-                getData(mydata);
+                firstVariable = newValue;
+                getData(myData);
                 fillLineChart();
-                fillXYChart(mydata);
-                fillHistogram(barChart1,firstvariable);
+                fillXYChart(myData);
+                fillHistogram(barChart1, firstVariable);
             }
         });
         // Y Combobox
@@ -118,11 +113,11 @@ public final class App extends Application {
                 if(newValue == null || isOpeningFile){
                     return;
                 }
-                secondvariable = newValue;
-                getData(mydata);
+                secondVariable = newValue;
+                getData(myData);
                 fillLineChart();
-                fillXYChart(mydata);
-                fillHistogram(barChart2,secondvariable);
+                fillXYChart(myData);
+                fillHistogram(barChart2,secondVariable);
 
             }
         });
@@ -142,9 +137,7 @@ public final class App extends Application {
         filePathButton.setOnAction(actionEvent -> {
             isOpeningFile = true;
             File file = openFile(primarystage);
-            if(mydata!=null){
-                filePathTextField.setText(file.getAbsolutePath());
-            }
+            filePathTextField.setText(file.getAbsolutePath());
             displayFile(primarystage, file);
             fillVariableComboBoxes(xComboBox, yComboBox);
             isOpeningFile = false;
@@ -155,7 +148,7 @@ public final class App extends Application {
         // First Line HBox
         HBox firstLine = new HBox();
         firstLine.getChildren().addAll(filePathTextField, filePathButton);
-        firstLine.setAlignment(Pos.CENTER_RIGHT);
+        firstLine.setAlignment(Pos.CENTER);
         firstLine.setSpacing(10);
         firstLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         firstLine.setStyle("-fx-background-color: white;");
@@ -163,7 +156,7 @@ public final class App extends Application {
         // Second Line HBox
         HBox secondLine = new HBox();
         secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorPicker, slider);
-        secondLine.setAlignment(Pos.CENTER_RIGHT);
+        secondLine.setAlignment(Pos.CENTER);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         secondLine.setStyle("-fx-background-color: white;");
@@ -204,8 +197,8 @@ public final class App extends Application {
 
         // Stage
         primarystage.setTitle("Datenvisualisierung");
-        //primarystage.setMinHeight(1000);
-        //primarystage.setMinWidth(1000);
+        primarystage.setMinHeight(1000);
+        primarystage.setMinWidth(1000);
         //primarystage.setMaxHeight(1000);
         //primarystage.setMaxWidth(1000);
         primarystage.setScene(scene);
@@ -225,154 +218,128 @@ public final class App extends Application {
         }
     }
 
-
     private void fillVariableComboBoxes(ComboBox<String> xComboBox, ComboBox<String> yComboBox){
         xComboBox.getItems().clear();
-        xComboBox.getItems().addAll(mydata.getVariableNames());
-        xComboBox.setValue(firstvariable);
+        xComboBox.getItems().addAll(myData.getVariableNames());
+        xComboBox.setValue(firstVariable);
         yComboBox.getItems().clear();
-        yComboBox.getItems().addAll(mydata.getVariableNames());
-        yComboBox.setValue(secondvariable);
+        yComboBox.getItems().addAll(myData.getVariableNames());
+        yComboBox.setValue(secondVariable);
     }
 
     private File openFile(Stage primarystage) {
         //select a line or tab oriented file
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Open Resource File");
-        fc.getExtensionFilters().addAll(
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
         new FileChooser.ExtensionFilter("(*.lin), (*.txt)", "*.txt", "*.lin"));
         //read and parse Data
-        return fc.showOpenDialog(primarystage);
+        return fileChooser.showOpenDialog(primarystage);
 
     }
 
-    private void displayFile(Stage primaryStage, File selectedFile) {
-        if (selectedFile != null) {
-            try {
-                if (selectedFile.getName().endsWith(".txt")) {
-                    mydata = new TabReader().parseContents(selectedFile);
-
-
-                } else if (selectedFile.getName().endsWith(".lin")) {
-                    mydata = new LineReader().parseContents(selectedFile);
-
-
-                }
-
-            } catch (DataReaderException e) {
-                showErrorMessage(e.getMessage());
-
+    private void displayFile(Stage primaryStage, File selectedFile){
+        try {
+            if (selectedFile.getName().endsWith(".txt")) {
+                myData = new TabReader().parseContents(selectedFile);
             }
+            else if (selectedFile.getName().endsWith(".lin")) {
+                myData = new LineReader().parseContents(selectedFile);
+            }
+
+        } catch (DataReaderException e) {
+            showErrorMessage(e.getMessage());
         }
-
-        getVariable(mydata);
-        getData(mydata);
-        fillXYChart(mydata);
+        getVariable(myData);
+        getData(myData);
+        fillXYChart(myData);
         fillLineChart();
-        fillHistogram(barChart1, firstvariable);
-        fillHistogram(barChart2, secondvariable);
+        fillHistogram(barChart1, firstVariable);
+        fillHistogram(barChart2, secondVariable);
     }
 
-    private void getData(Data mydata) {
-        dataFirstvariable = mydata.getDataForVariable(firstvariable);
-        dataSecondvariable = mydata.getDataForVariable(secondvariable);
+    private void getData(Data myData) {
+        dataFirstVariable = myData.getDataForVariable(firstVariable);
+        dataSecondVariable = myData.getDataForVariable(secondVariable);
     }
 
-    private void getVariable(Data mydata) {
-
+    private void getVariable(Data myData) {
         //get variable names
-        Set<String> vars = mydata.getVariableNames();
+        Set<String> vars = myData.getVariableNames();
         Iterator<String> iter = vars.iterator();
-        firstvariable = iter.next();
+        firstVariable = iter.next();
         if (iter.hasNext()) {
-            secondvariable = iter.next();
-        } else firstvariable = secondvariable;
-
-
+            secondVariable = iter.next();
+        }
+        else firstVariable = secondVariable;
     }
 
     //Alert Window
-    private void showErrorMessage(String msg) {
+    private void showErrorMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText("An Error occurred: ");
-        alert.setContentText(msg);
-
+        alert.setContentText(message);
         alert.showAndWait();
     }
 
-
-
     //Scatterchart
-    private  void fillXYChart(Data mydata) {
+    private  void fillXYChart(Data myData) {
         //put data in XY-scatterchart
         series1.getData().clear();
-        for (int i = 0; i < dataFirstvariable.length; i++) {
-            Double x =dataFirstvariable[i];
-            Double y =dataSecondvariable[i];
-            XYChart.Data<Number,Number> dataPoint=new XYChart.Data<>(x,y);
-            Circle circle=new Circle();
+        for (int i = 0; i < dataFirstVariable.length; i++) {
+            Double x = dataFirstVariable[i];
+            Double y = dataSecondVariable[i];
+            XYChart.Data<Number,Number> dataPoint = new XYChart.Data<>(x, y);
+            Circle circle = new Circle();
             slider.valueProperty().addListener((observable, oldValue, newValue) -> {
                         circle.setRadius(slider.getValue());
-                    });
+            });
             colorPicker.valueProperty().addListener(observable -> {circle.setFill(colorPicker.getValue());});
-
             dataPoint.setNode(circle);
             series1.getData().add(dataPoint);
-
            //scatterChart.getData().add(series1);
-
-
-
-
         }
-        //hinzufügen des Scattercharts, eventuell noch verschiebe
-
-
     }
 
     private void fillLineChart() {
         series2.getData().clear();
-        for (int i = 0; i < dataFirstvariable.length; i++) {
-            series2.getData().add(new LineChart.Data<>(dataFirstvariable[i], dataSecondvariable[i]));}
-
+        for (int i = 0; i < dataFirstVariable.length; i++) {
+            series2.getData().add(new LineChart.Data<>(dataFirstVariable[i], dataSecondVariable[i]));}
     }
+
     //fillHistogram
-    BarChart<String, Number> fillHistogram(BarChart<String,Number>chrt, String varName){
-        Double[] d = mydata.getDataForVariable(varName);
-        int numBins= (int) Math.sqrt(d.length);
+    BarChart<String, Number> fillHistogram(BarChart<String,Number>chart, String variableName){
+        Double[] d = myData.getDataForVariable(variableName);
+        int numBins = (int) Math.sqrt(d.length);
         int ret[] = new int [numBins];
-        Double min= Collections.min(Arrays.asList(d));
-        Double max=Collections.max(Arrays.asList(d));
-        Double range=max-min;
-        for(int i=0;i<numBins;i++){
-            ret[i]=0;
+        Double min = Collections.min(Arrays.asList(d));
+        Double max = Collections.max(Arrays.asList(d));
+        Double range = max-min;
+        for(int i = 0; i < numBins; i++){
+            ret[i] = 0;
         }
         for (Double v : d) {
-
-            int z= (int)((v-min)/(range+0.000001)*(numBins));
+            int z = (int)((v-min) / (range + 0.000001) * (numBins));
             ret[z]++;
         }
-        String[] xAxis=new String[numBins];
-        for(int i= 0;i<numBins;i++){
-            xAxis[i]= String.format("%.2f to %.2f",(min+i*range/numBins),(min+(i+1)*range/numBins));
+        String[] xAxis = new String[numBins];
+        for(int i = 0; i < numBins; i++){
+            xAxis[i] = String.format("%.2f to %.2f",(min + i * range / numBins), (min + (i + 1) * range / numBins));
         }
-        XYChart.Series s=new XYChart.Series<>();
-        for(int i=0;i<numBins;i++){
-            s.getData().add(new XYChart.Data(xAxis[i], ret[i]));
+        XYChart.Series series = new XYChart.Series<>();
+        for(int i = 0; i < numBins; i++){
+            series.getData().add(new XYChart.Data(xAxis[i], ret[i]));
         }
-        chrt.getData().clear();
-        chrt.getData().addAll(s);
-        chrt.setTitle(varName);
-        chrt.setLegendVisible(false);
-        chrt.setCategoryGap(0);
-        chrt.setBarGap(0);
-        chrt.setStyle("-fx-background-color: transparent;");
-
-
-        return chrt;
+        chart.getData().clear();
+        chart.getData().addAll(series);
+        chart.setTitle(variableName);
+        chart.setLegendVisible(false);
+        chart.setCategoryGap(0);
+        chart.setBarGap(0);
+        chart.setStyle("-fx-background-color: transparent;");
+        return chart;
     }
-
 }
 
 
