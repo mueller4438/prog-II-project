@@ -142,7 +142,9 @@ public final class App extends Application {
         filePathButton.setOnAction(actionEvent -> {
             isOpeningFile = true;
             File file = openFile(primarystage);
-            filePathTextField.setText(file.getAbsolutePath());
+            if(mydata!=null){
+                filePathTextField.setText(file.getAbsolutePath());
+            }
             displayFile(primarystage, file);
             fillVariableComboBoxes(xComboBox, yComboBox);
             isOpeningFile = false;
@@ -244,22 +246,25 @@ public final class App extends Application {
 
     }
 
-    private void displayFile(Stage primaryStage, File selectedFile){
-        try {
-            if (selectedFile.getName().endsWith(".txt")) {
-                mydata = new TabReader().parseContents(selectedFile);
+    private void displayFile(Stage primaryStage, File selectedFile) {
+        if (selectedFile != null) {
+            try {
+                if (selectedFile.getName().endsWith(".txt")) {
+                    mydata = new TabReader().parseContents(selectedFile);
 
 
-            } else if (selectedFile.getName().endsWith(".lin")) {
-                mydata = new LineReader().parseContents(selectedFile);
+                } else if (selectedFile.getName().endsWith(".lin")) {
+                    mydata = new LineReader().parseContents(selectedFile);
 
+
+                }
+
+            } catch (DataReaderException e) {
+                showErrorMessage(e.getMessage());
 
             }
-
-        } catch (DataReaderException e) {
-            showErrorMessage(e.getMessage());
-
         }
+
         getVariable(mydata);
         getData(mydata);
         fillXYChart(mydata);
