@@ -152,7 +152,7 @@ public final class App extends Application {
         // First Line HBox
         HBox firstLine = new HBox();
         firstLine.getChildren().addAll(filePathTextField, filePathButton);
-        firstLine.setAlignment(Pos.CENTER_RIGHT);
+        firstLine.setAlignment(Pos.CENTER);
         firstLine.setSpacing(10);
         firstLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         firstLine.setStyle("-fx-background-color: white;");
@@ -160,7 +160,7 @@ public final class App extends Application {
         // Second Line HBox
         HBox secondLine = new HBox();
         secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorPicker, slider);
-        secondLine.setAlignment(Pos.CENTER_RIGHT);
+        secondLine.setAlignment(Pos.CENTER);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
         secondLine.setStyle("-fx-background-color: white;");
