@@ -30,13 +30,13 @@ public final class App extends Application {
         launch(args);
     }
 
-    private String firstVariable, secondVariable;
+    private String firstVariable, secondVariable, thirdVariable;
     private Double[] dataFirstVariable, dataSecondVariable;
     private Data myData;
     private boolean isOpeningFile;
     private boolean isVisible = true;
     ColorPicker colorPicker = new ColorPicker();
-    Slider slider = new Slider(0, 25, 10);
+    Slider slider = new Slider(0, 25, 3);
 
 
     final NumberAxis xAxis = new NumberAxis();
@@ -71,6 +71,7 @@ public final class App extends Application {
         //Slider Point Size
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
+
 
         // Disable Line Chart Button
         Button visibleButton = new Button();
@@ -123,11 +124,23 @@ public final class App extends Application {
         });
         // Z Combobox
         ComboBox<String> zComboBox = new ComboBox<String>();
+        zComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue==null || isOpeningFile){
+                    return;
+                }
+                thirdVariable=newValue;
+                fillXYChart(myData);
+
+
+            }
+        });
         //zComboBox.setPrefSize(150, 10);
-        zComboBox.getItems().addAll(
-                "", "Variable X", "Variable Y", "Variable Z"
-        );
-        zComboBox.setValue("");
+        //zComboBox.getItems().addAll(
+           //     "", "Variable X", "Variable Y", "Variable Z"
+       // );
+        //zComboBox.setValue("");
 
         StackPane scatterPane = new StackPane(lineChart, scatterChart);
         scatterChart.lookup(".chart-plot-background").setStyle("-fx-background-color: transparent");
@@ -139,7 +152,7 @@ public final class App extends Application {
             File file = openFile(primarystage);
             filePathTextField.setText(file.getAbsolutePath());
             displayFile(primarystage, file);
-            fillVariableComboBoxes(xComboBox, yComboBox);
+            fillVariableComboBoxes(xComboBox, yComboBox,zComboBox);
             isOpeningFile = false;
         });
 
@@ -218,13 +231,17 @@ public final class App extends Application {
         }
     }
 
-    private void fillVariableComboBoxes(ComboBox<String> xComboBox, ComboBox<String> yComboBox){
+    private void fillVariableComboBoxes(ComboBox<String> xComboBox, ComboBox<String> yComboBox,ComboBox<String> zComboBox){
         xComboBox.getItems().clear();
         xComboBox.getItems().addAll(myData.getVariableNames());
         xComboBox.setValue(firstVariable);
         yComboBox.getItems().clear();
         yComboBox.getItems().addAll(myData.getVariableNames());
         yComboBox.setValue(secondVariable);
+        zComboBox.getItems().clear();
+        zComboBox.getItems().addAll(myData.getVariableNames());
+        zComboBox.setValue(thirdVariable);
+
     }
 
     private File openFile(Stage primarystage) {
@@ -270,7 +287,11 @@ public final class App extends Application {
         firstVariable = iter.next();
         if (iter.hasNext()) {
             secondVariable = iter.next();
-        }
+            if (iter.hasNext()) {
+            thirdVariable=iter.next();
+            }
+            }
+
         else firstVariable = secondVariable;
     }
 
@@ -292,9 +313,16 @@ public final class App extends Application {
             Double y = dataSecondVariable[i];
             XYChart.Data<Number,Number> dataPoint = new XYChart.Data<>(x, y);
             Circle circle = new Circle();
-            slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-                        circle.setRadius(slider.getValue());
+
+            circle.setRadius(slider.getValue());
+            slider.valueProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                    circle.setRadius(slider.getValue());
+                }
             });
+
+            circle.setFill(colorPicker.getValue());
             colorPicker.valueProperty().addListener(observable -> {circle.setFill(colorPicker.getValue());});
             dataPoint.setNode(circle);
             series1.getData().add(dataPoint);
