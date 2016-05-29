@@ -83,7 +83,7 @@ public final class App extends Application {
 
         // Labels
         // Label Plot
-        Label plotLabel = new Label ("Plot: ");
+        Label plotLabel = new Label ("Plot Color: ");
         // Label Line Chart
         Label lineChartLabel = new Label ("Line Chart: ");
         // Labels Combobox
@@ -166,7 +166,7 @@ public final class App extends Application {
 
         // Second Line HBox
         HBox secondLine = new HBox();
-        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorPicker, slider);
+        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, lineChartLabel, visibleButton, plotLabel, colorPicker, sizeLabel, zComboBox, slider);
         secondLine.setAlignment(Pos.CENTER);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
