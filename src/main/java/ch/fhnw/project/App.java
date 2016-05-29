@@ -31,7 +31,7 @@ public final class App extends Application {
     }
 
     private String firstVariable, secondVariable, thirdVariable;
-    private Double[] dataFirstVariable, dataSecondVariable;
+    private Double[] dataFirstVariable, dataSecondVariable,dataThirdVariable;
     private Data myData;
     private boolean isOpeningFile;
     private boolean isVisible = true;
@@ -71,6 +71,8 @@ public final class App extends Application {
         //Slider Point Size
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
+
+
 
 
         // Disable Line Chart Button
@@ -136,11 +138,7 @@ public final class App extends Application {
 
             }
         });
-        //zComboBox.setPrefSize(150, 10);
-        //zComboBox.getItems().addAll(
-           //     "", "Variable X", "Variable Y", "Variable Z"
-       // );
-        //zComboBox.setValue("");
+
 
         StackPane scatterPane = new StackPane(lineChart, scatterChart);
         scatterChart.lookup(".chart-plot-background").setStyle("-fx-background-color: transparent");
@@ -278,6 +276,7 @@ public final class App extends Application {
     private void getData(Data myData) {
         dataFirstVariable = myData.getDataForVariable(firstVariable);
         dataSecondVariable = myData.getDataForVariable(secondVariable);
+
     }
 
     private void getVariable(Data myData) {
@@ -288,8 +287,9 @@ public final class App extends Application {
         if (iter.hasNext()) {
             secondVariable = iter.next();
             if (iter.hasNext()) {
-            thirdVariable=iter.next();
+            thirdVariable=null;
             }
+            else thirdVariable=null;
             }
 
         else firstVariable = secondVariable;
@@ -308,19 +308,33 @@ public final class App extends Application {
     private  void fillXYChart(Data myData) {
         //put data in XY-scatterchart
         series1.getData().clear();
+
+
+
+
+
         for (int i = 0; i < dataFirstVariable.length; i++) {
             Double x = dataFirstVariable[i];
             Double y = dataSecondVariable[i];
+
             XYChart.Data<Number,Number> dataPoint = new XYChart.Data<>(x, y);
             Circle circle = new Circle();
 
             circle.setRadius(slider.getValue());
-            slider.valueProperty().addListener(new ChangeListener<Number>() {
-                @Override
-                public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                    circle.setRadius(slider.getValue());
-                }
-            });
+            if(thirdVariable!=null) {
+                Double z = myData.getDataForVariable(thirdVariable)[i];
+                double size=bubbleSizeMaxValue(myData);
+
+                slider.valueProperty().addListener((observable, oldValue, newValue) ->
+
+                        circle.setRadius(slider.getValue() * z / size * 5
+                        ));
+            }
+            else slider.valueProperty().addListener((observable, oldValue, newValue) ->
+
+                    circle.setRadius(slider.getValue() )
+            );
+
 
             circle.setFill(colorPicker.getValue());
             colorPicker.valueProperty().addListener(observable -> {circle.setFill(colorPicker.getValue());});
@@ -328,6 +342,21 @@ public final class App extends Application {
             series1.getData().add(dataPoint);
            //scatterChart.getData().add(series1);
         }
+    }
+
+
+    //Bubble size scaling
+    private double bubbleSizeMaxValue(Data myData) {
+        if(thirdVariable!=null) {
+            Double[] d = myData.getDataForVariable(thirdVariable);
+            Double max = Collections.max(Arrays.asList(d));
+            return max;
+        }
+
+        else {
+            Double max= 1.0;
+            return max;
+            }
     }
 
     private void fillLineChart() {
