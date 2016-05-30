@@ -37,6 +37,7 @@ public final class App extends Application {
     private boolean isVisible = true;
     ColorPicker colorPicker = new ColorPicker();
     Slider slider = new Slider(0, 25, 3);
+    CheckBox checkBox=new CheckBox();
 
 
     final NumberAxis xAxis = new NumberAxis();
@@ -71,6 +72,12 @@ public final class App extends Application {
         //Slider Point Size
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
+
+        //Checkbox
+
+        checkBox.setSelected(true);
+
+
 
 
 
@@ -133,7 +140,12 @@ public final class App extends Application {
                     return;
                 }
                 thirdVariable=newValue;
+                series1.getData().clear();
                 fillXYChart(myData);
+
+
+
+
 
 
             }
@@ -166,7 +178,7 @@ public final class App extends Application {
 
         // Second Line HBox
         HBox secondLine = new HBox();
-        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorPicker, slider);
+        secondLine.getChildren().addAll(xLabel, xComboBox, yLabel, yComboBox, sizeLabel, zComboBox, lineChartLabel, visibleButton, plotLabel, colorPicker, slider,checkBox);
         secondLine.setAlignment(Pos.CENTER);
         secondLine.setSpacing(10);
         secondLine.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
@@ -310,38 +322,70 @@ public final class App extends Application {
         series1.getData().clear();
 
 
-
-
-
         for (int i = 0; i < dataFirstVariable.length; i++) {
             Double x = dataFirstVariable[i];
             Double y = dataSecondVariable[i];
 
-            XYChart.Data<Number,Number> dataPoint = new XYChart.Data<>(x, y);
+            XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(x, y);
             Circle circle = new Circle();
 
             circle.setRadius(slider.getValue());
-            if(thirdVariable!=null) {
+            checkBox.selectedProperty();
+            if (thirdVariable != null) {
                 Double z = myData.getDataForVariable(thirdVariable)[i];
-                double size=bubbleSizeMaxValue(myData);
+                sliderPointSize(myData, z, circle);
 
-                slider.valueProperty().addListener((observable, oldValue, newValue) ->
 
-                        circle.setRadius(slider.getValue() * z / size * 5
-                        ));
+                ChangeListener<Boolean> changeListener = new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        if (checkBox.isSelected()) {
+                            sliderPointSize(myData, z, circle);
+                        }
+
+
+                        //double size = bubbleSizeMaxValue(myData);
+                        //circle.setRadius(slider.getValue() * z / size * 5);
+
+                        else
+                            sliderPointSize(myData, z, circle);
+                        //circle.setRadius(slider.getValue());
+
+                    }
+
+                    ;
+                };
             }
-            else slider.valueProperty().addListener((observable, oldValue, newValue) ->
-
-                    circle.setRadius(slider.getValue() )
-            );
 
 
             circle.setFill(colorPicker.getValue());
-            colorPicker.valueProperty().addListener(observable -> {circle.setFill(colorPicker.getValue());});
+            colorPicker.valueProperty().addListener(observable -> {
+                circle.setFill(colorPicker.getValue());
+            });
             dataPoint.setNode(circle);
             series1.getData().add(dataPoint);
-           //scatterChart.getData().add(series1);
+            //scatterChart.getData().add(series1);
+
         }
+    }
+
+    private void sliderPointSize(Data myData, double z, Circle circle) {
+        if(thirdVariable!=null && checkBox.isSelected()) {
+
+
+
+
+             double size=bubbleSizeMaxValue(myData);
+
+             slider.valueProperty().addListener((observable, oldValue, newValue) ->
+
+                     circle.setRadius(slider.getValue() * z / size * 5
+                     ));
+         }
+         else slider.valueProperty().addListener((observable, oldValue, newValue) ->
+
+                 circle.setRadius(slider.getValue() )
+         );
     }
 
 
@@ -380,6 +424,7 @@ public final class App extends Application {
             int z = (int)((v-min) / (range + 0.000001) * (numBins));
             ret[z]++;
         }
+
         String[] xAxis = new String[numBins];
         for(int i = 0; i < numBins; i++){
             xAxis[i] = String.format("%.2f to %.2f",(min + i * range / numBins), (min + (i + 1) * range / numBins));
