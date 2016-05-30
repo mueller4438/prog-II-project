@@ -31,7 +31,7 @@ public final class App extends Application {
     }
 
     private String firstVariable, secondVariable, thirdVariable;
-    private Double[] dataFirstVariable, dataSecondVariable,dataThirdVariable;
+    private Double[] dataFirstVariable, dataSecondVariable, dataThirdVariable;
     private Data myData;
     private boolean isOpeningFile;
     private boolean isVisible = true;
@@ -60,8 +60,12 @@ public final class App extends Application {
         lineChart.setAxisSortingPolicy(LineChart.SortingPolicy.NONE);
         scatterChart.getData().add(series1);
         scatterChart.setLegendVisible(false);
+        xAxis.setLabel("X");
+        yAxis.setLabel("Y");
         lineChart.getData().add(series2);
         lineChart.setLegendVisible(false);
+        x1Axis.setLabel("X");
+        y1Axis.setLabel("Y");
 
         // File Path Text Field
         TextField filePathTextField = new TextField();
@@ -69,8 +73,8 @@ public final class App extends Application {
         filePathTextField.setPrefSize(1000, 5);
 
         //Slider Point Size
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
+        slider.setShowTickLabels(false);
+        slider.setShowTickMarks(false);
 
 
 
@@ -93,7 +97,7 @@ public final class App extends Application {
 
         // X Combobox
         ComboBox<String> xComboBox = new ComboBox<String>();
-        //xComboBox.setPrefSize(150, 10);
+        xComboBox.setPrefSize(100, 10);
         xComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -109,7 +113,7 @@ public final class App extends Application {
         });
         // Y Combobox
         ComboBox<String> yComboBox = new ComboBox<String>();
-        //yComboBox.setPrefSize(150, 10);
+        yComboBox.setPrefSize(100, 10);
         yComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -126,6 +130,7 @@ public final class App extends Application {
         });
         // Z Combobox
         ComboBox<String> zComboBox = new ComboBox<String>();
+        zComboBox.setPrefSize(100, 10);
         zComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -204,20 +209,20 @@ public final class App extends Application {
         stackpane.getChildren().add(pane);
 
         // Scene
-        Scene scene = new Scene(stackpane, 1000, 1000);
+        Scene scene = new Scene(stackpane, 1200, 800);
 
         // Stage
         primarystage.setTitle("Datenvisualisierung");
-        primarystage.setMinHeight(1000);
-        primarystage.setMinWidth(1000);
-        //primarystage.setMaxHeight(1000);
-        //primarystage.setMaxWidth(1000);
+        primarystage.setMinHeight(750);
+        primarystage.setMinWidth(750);
+        //primarystage.setMaxHeight(1500);
+        //primarystage.setMaxWidth(1500);
         primarystage.setScene(scene);
         primarystage.show();
     }
 
     private void isLineChartVisible(Button visibleButton){
-        if (isVisible == true){
+        if (isVisible){
             visibleButton.setText("visible");
             lineChart.setVisible(false);
             isVisible = false;
