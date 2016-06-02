@@ -19,63 +19,60 @@ public class LineReader extends DataReader {
         try {
             int lineNum = 0;
             String line = bufferedReader.readLine(); lineNum++;
-            if(line.length() == 0 || line == null){
+            if(line.length() == 0){
                 throw new DataReaderException("Error no data found");
             }
 
-            //get number of variables
+            //Get Number Of Variables
             int numberOfVariables = parseInt(line,lineNum);
             if(numberOfVariables == 0){
                 throw new DataReaderException("Error no variables found");
             }
 
-            //get variable names
+            //Get Variable Names
             String[] variableNames = new String[numberOfVariables];
             for(int i = 0; i < numberOfVariables; i++){
                 line = bufferedReader.readLine(); lineNum++;
                 if(line == null || line.length() == 0){
-                    throw new DataReaderException("Error: tried to extract a variable name from line "+lineNum+" but found no data there");
+                    throw new DataReaderException("Error: tried to extract a variable name from line "+ lineNum +" but found no data there");
                 }
                 variableNames[i] = line;
             }
-            //get Delimiter
+            //Get Delimiter
             String delimiter= bufferedReader.readLine(); lineNum++;
-            if(line == null || line.length() == 0){
-                throw new DataReaderException("Error: tried to extract delimiter "+lineNum+" but found no delimiter there");
+            if(line.length() == 0){
+                throw new DataReaderException("Error: tried to extract delimiter "+ lineNum +" but found no delimiter there");
             }
 
-            //read Data for all variables
+            //Read Data For All Variables
             Map<String,Double[]> dataMap = new HashMap<>(numberOfVariables);
             int dataLength = -1;
             for(int i = 0; i < numberOfVariables; i++) {
                 line = bufferedReader.readLine(); lineNum++;
                 if(line == null || line.length() == 0){
-                    throw new DataReaderException("Error: tried to extract data from line "+lineNum+" but found no data there");
+                    throw new DataReaderException("Error: tried to extract data from line "+ lineNum +" but found no data there");
                 }
-
                 List<Double> data = new LinkedList<>();
-
                 for (String s : linesplit(line, delimiter)) {
                     data.add(parseDouble(s,lineNum));
-
                 }
                 if(i == 0) {
-                    //on first iteration remember data length so that we can compare with the others
+                    //On First Iteration Remember Data Length So That We Can Compare With The Others
                     dataLength = data.size();
                 }
                 else{
                     if(dataLength != data.size()){
-                    //on all other iteration we make sure that the read data lines have the same length
-                    throw new DataReaderException("Error: datalength between variables are different, expected number of datapoints = "+ dataLength +"found number of datapoint= " +data.size()+",Error on line "+ lineNum);
+                    //On All Other Iteration We Make Sure That The Read Data Lines Have The Same Length
+                    throw new DataReaderException("Error: datalength between variables are different, expected number of datapoints = "+ dataLength +"found number of datapoint = " + data.size() +",Error on line "+ lineNum);
                     }
                 }
-                Double[] vals = new Double[data.size()];
-                data.toArray(vals);
-                dataMap.put(variableNames[i], vals);
+                Double[] variable = new Double[data.size()];
+                data.toArray(variable);
+                dataMap.put(variableNames[i], variable);
             }
                 return  new DataImplementation(dataMap);
-
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new DataReaderException("Error while reading data "+e.getMessage());
 
         }

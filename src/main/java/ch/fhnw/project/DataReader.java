@@ -39,7 +39,7 @@ public abstract class DataReader {
         try {
             return Integer.parseInt(s);
         }catch(NumberFormatException e){
-            throw new DataReaderException("Error on line "+lineNum+": Unable to parse "+s+" as a integer");
+            throw new DataReaderException("Error on line "+ lineNum +": Unable to parse "+ s +" as a integer");
         }
     }
 }
