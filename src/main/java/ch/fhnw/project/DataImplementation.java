@@ -9,6 +9,7 @@ import java.util.Set;
 public class DataImplementation implements Data {
 
         private final Map<String, Double[]> dataMap;
+        private final Double[] emptyList = new Double[0];
         public DataImplementation(Map<String, Double[]> data){
             dataMap  = data;
         }
@@ -20,7 +21,10 @@ public class DataImplementation implements Data {
 
     @Override
     public Double[] getDataForVariable(String variableName) {
-        return dataMap.get(variableName);
+        if(dataMap.containsKey(variableName)) {
+            return dataMap.get(variableName);
+        }
+        return emptyList;
     }
 }
 

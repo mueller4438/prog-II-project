@@ -19,7 +19,7 @@ public class LineReader extends DataReader {
         try {
             int lineNum = 0;
             String line = bufferedReader.readLine(); lineNum++;
-            if(line.length() == 0){
+            if(line == null || line.length() == 0){
                 throw new DataReaderException("Error no data found");
             }
 

@@ -21,7 +21,7 @@ public class TabReader extends DataReader  {
         try {
             //Get Variable Names
             String line = bufferedReader.readLine();
-            if(line.length() == 0){
+            if(line == null || line.length() == 0){
                 throw new DataReaderException("Error;no data found");
             }
             String[] nameOfVariables = splitLine(line);

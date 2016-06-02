@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Set;
 
 /**
  * Created by Müller on 13.05.2016.
@@ -32,14 +31,14 @@ public abstract class DataReader {
         try {
             return Double.parseDouble(s);
         } catch (NumberFormatException e) {
-            throw new DataReaderException("Error on line " + lineNum + ": Unable to parse " + s + " as a Double");
+            throw new DataReaderException("Error on line " + lineNum + ": Unable to parse \"" + s + "\" as a Double");
         }
     }
     static int parseInt(String s, long lineNum) throws DataReaderException{
         try {
             return Integer.parseInt(s);
         }catch(NumberFormatException e){
-            throw new DataReaderException("Error on line "+ lineNum +": Unable to parse "+ s +" as a integer");
+            throw new DataReaderException("Error on line "+ lineNum +": Unable to parse \""+ s +"\" as a integer");
         }
     }
 }
