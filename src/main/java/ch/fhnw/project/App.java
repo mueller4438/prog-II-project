@@ -14,8 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-
 import java.io.File;
 import java.util.*;
 
