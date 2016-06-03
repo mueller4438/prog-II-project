@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Müller on 13.05.2016.
+ * Created by Müller, Killer on 13.05.2016.
  */
+
 public class LineReader extends DataReader {
 @Override
     public Data parseContents(InputStream input) throws DataReaderException{
@@ -38,6 +39,7 @@ public class LineReader extends DataReader {
                 }
                 variableNames[i] = line;
             }
+
             //Get Delimiter
             String delimiter= bufferedReader.readLine(); lineNum++;
             if(line.length() == 0){

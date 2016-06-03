@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Mueller on 13.05.2016.
+ * Created by Müller, Killer on 13.05.2016.
  */
+
 public class TabReader extends DataReader  {
     @Override
 

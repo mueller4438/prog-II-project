@@ -16,8 +16,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.util.*;
-
 import static javafx.scene.layout.Priority.ALWAYS;
+
+/**
+ * Created by Müller, Killer on 13.05.2016.
+ */
 
 public final class App extends Application {
     public App() {
@@ -145,7 +148,6 @@ public final class App extends Application {
         // File Path Button
         Button filePathButton = new Button(" ... ");
         filePathButton.setOnAction(actionEvent -> {
-
             isOpeningFile = true;
             File file = openFile(primarystage);
             if(file != null) {
@@ -212,7 +214,7 @@ public final class App extends Application {
         Scene scene = new Scene(stackPane, 1200, 1000);
 
         // Stage
-        primarystage.setTitle("Datenvisualisierung");
+        primarystage.setTitle("Data Visualization");
         primarystage.setScene(scene);
         primarystage.show();
     }

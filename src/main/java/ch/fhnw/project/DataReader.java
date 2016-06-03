@@ -1,18 +1,16 @@
 package ch.fhnw.project;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
- * Created by Müller on 13.05.2016.
+ * Created by Müller, Killer on 13.05.2016.
  */
+
 public abstract class DataReader {
-
     public abstract Data parseContents(InputStream input) throws DataReaderException;
-
 
     public Data parseContents(File input) throws DataReaderException {
         try {
@@ -24,9 +22,7 @@ public abstract class DataReader {
         }
     }
 
-
     //helper function
-
     static double parseDouble(String s, long lineNum) throws DataReaderException {
         try {
             return Double.parseDouble(s);
@@ -34,6 +30,7 @@ public abstract class DataReader {
             throw new DataReaderException("Error on line " + lineNum + ": Unable to parse \"" + s + "\" as a Double");
         }
     }
+
     static int parseInt(String s, long lineNum) throws DataReaderException{
         try {
             return Integer.parseInt(s);
